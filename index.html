@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Online Lottery</title>
+    <script src="<script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.36/dist/web3.min.js" integrity="sha256-nWBTbvxhJgjslRyuAKJHK+XcZPlCnmIAAMixz6EefVk=" crossorigin="anonymous"></script>"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  </head>
+
+<body>
+<form>
+  <fieldset>
+    <head><u>LOTTERY CONTRACT</u></head>
+    <p id="msg"> </p>
+    <p id ="msg1"></p>
+    <p id="msg2"></p>
+    <div>
+        <head>Want to try your luck?</head>
+
+    </div>
+    <p><br></p>
+    <div>
+        <label>Amount of ether to enter:</label> <input id="num" type='number'>
+                <input id="enter" type = 'submit' value = "ENTER">
+    </div>
+    <p><br></p>
+    <div>
+        <label>Time to pick a winner?</label>
+        <input id="pick" type='submit' value="Pick Winner">
+    </div>
+    <p><br></p>
+    <div>
+        <p id="winner">Winner is :-</p>
+    </div>
+
+  </fieldset>
+</form>
+
+</body>
+
+<script>
+
+         if(typeof web3 !== 'undefined') {
+
+             console.log("Unlock MetaMask");
+
+             web3 = new Web3(web3.currentProvider);
+
+         }
+
+         else {
+
+             console.log("Install MetaMask");
+
+             web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+
+         }
+
+         web3.version.getNetwork((err, netId) => {
+
+switch (netId) {
+
+    case "1":
+
+        console.log('This is mainnet')
+
+        break
+
+    case "2":
+
+        console.log('This is the deprecated Morden test network.')
+
+        break
+
+    case "3":
+
+        console.log('This is the ropsten test network.')
+
+        break
+
+    case "4":
+
+        console.log('This is the Rinkeby test network.')
+
+        break
+
+    case "42":
+
+        console.log('This is the Kovan test network.')
+
+        break
+
+    default:
+
+        console.log('This is an unknown network.')
+
+}
+
+})
+
+         web3.eth.defaultAccount=web3.eth.accounts[0];
+
+     var testContract = web3.eth.contract(  *** Enter ABI ****);
+     var test = testContract.at(** Contract address **);
+     $("#enter").click(function(){
+       test.enter({from: web3.eth.accounts[0], gas: 3000000, value: $("#num").val()},(error,result) => (console.log(result)));
+     });
+
+     $("#pick").click(function(){
+       test.pickWinner((error,result) => (console.log(result)));
+     });
+
+     test.getWinner(function(error,result){
+       if(!error)
+       {
+         $("winner").html("The winner is : "+ result);
+       }
+       else {
+         console.log(error);
+       }
+     });
+     test.Lottery(function(error,result){
+       if(!error)
+       {
+         $("msg").html("The Lottery is managed by "+ result);
+       }
+       else {
+         console.log(error);
+       }
+     });
+     test.total_players(function(error,result){
+       if(!error)
+       {
+         $("msg1").html("Total players : "+ result);
+       }
+       else {
+         console.log(error);
+       }
+     });
+     test.amount(function(error,result){
+       if(!error)
+       {
+         $("msg2").html("Total Amount is: "+ result);
+       }
+       else {
+         console.log(error);
+       }
+     });
+
+
+</script>
+
+</html>
